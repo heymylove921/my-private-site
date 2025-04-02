@@ -1,34 +1,42 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f4f4f4;
-    padding: 20px;
-}
+document.getElementById("addRootFolder").addEventListener("click", function() {
+    let folderName = prompt("Введите название папки:");
+    if (folderName) {
+        let root = document.createElement("div");
+        root.classList.add("folder");
+        root.innerHTML = folderName;
+        root.addEventListener("click", function(event) {
+            event.stopPropagation();
+            addSubFolder(root, 1);
+        });
+        let container = document.createElement("div");
+        container.classList.add("folder-content");
+        root.appendChild(container);
+        document.getElementById("folderTree").appendChild(root);
+    }
+});
 
-.tree {
-    text-align: left;
-    margin-top: 20px;
-    display: inline-block;
-}
+function addSubFolder(parent, level) {
+    if (level >= 12) {
+        alert("Максимальная вложенность — 12 уровней!");
+        return;
+    }
 
-.folder {
-    margin-left: 20px;
-    cursor: pointer;
-    font-weight: bold;
-}
+    let folderName = prompt("Введите название вложенной папки:");
+    if (folderName) {
+        let subFolder = document.createElement("div");
+        subFolder.classList.add("folder");
+        subFolder.innerHTML = folderName;
+        subFolder.addEventListener("click", function(event) {
+            event.stopPropagation();
+            addSubFolder(subFolder, level + 1);
+        });
 
-.folder::before {
-    content: "📁 ";
-}
+        let container = document.createElement("div");
+        container.classList.add("folder-content");
+        subFolder.appendChild(container);
 
-.folder-content {
-    margin-left: 20px;
-    display: none;
-}
-
-button {
-    margin: 10px;
-    padding: 8px 12px;
-    font-size: 14px;
-    cursor: pointer;
+        let parentContent = parent.querySelector(".folder-content");
+        parentContent.appendChild(subFolder);
+        parentContent.style.display = "block"; // Показываем содержимое папки
+    }
 }
